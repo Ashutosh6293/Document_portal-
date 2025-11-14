@@ -10,7 +10,7 @@ ENV/
 
 # Database
 *.db
-database/
+# database/
 
 # Logs
 logs/
