@@ -361,12 +361,17 @@ def get_site_config():
         'address': config.address
     })
 
+# ==================== API ENDPOINTS - UPDATED SECTION ====================
+# Replace the existing /api/portal-data route with this
+
 @app.route("/api/portal-data")
 def api_portal_data():
+    """Enhanced portal data API with proper document links"""
     categories = ProductCategory.query.order_by(ProductCategory.order).all()
     company_docs = CompanyDocument.query.all()
     is_logged_in = "user_id" in session
     
+    # Format company documents
     company_data = {}
     for doc in company_docs:
         if doc.location not in company_data:
@@ -375,9 +380,10 @@ def api_portal_data():
             'id': doc.id,
             'type': doc.doc_type,
             'name': doc.doc_name or doc.doc_type,
-            'link': f'/download/company/{doc.id}' if is_logged_in else '/login'
+            'link': doc.download_link  # Direct link for viewing
         })
     
+    # Format product categories and documents
     products_data = []
     for cat in categories:
         products = Product.query.filter_by(category_id=cat.id).order_by(Product.order).all()
@@ -393,6 +399,7 @@ def api_portal_data():
                     'id': d.id,
                     'type': d.doc_type,
                     'name': d.doc_name or d.doc_type,
+                    'link': d.download_link,  # Direct link for viewing
                     'download_count': d.download_count
                 } for d in docs]
             })
@@ -409,7 +416,6 @@ def api_portal_data():
         'categories': products_data,
         'isLoggedIn': is_logged_in
     })
-
 @app.route("/api/portal-stats")
 def portal_stats():
     """Portal statistics API"""
