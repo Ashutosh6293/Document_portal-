@@ -24,15 +24,26 @@
         margin: 0.25rem;
         background: #f8f9fa;
         border-radius: 20px;
-        cursor: pointer;
         transition: all 0.2s;
     }
     .doc-badge:hover {
         background: #e9ecef;
-        transform: scale(1.05);
     }
     .category-section {
         margin-bottom: 3rem;
+    }
+    .doc-item {
+        border-left: 3px solid #667eea;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        background: #f8f9fa;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .doc-item:hover {
+        background: #e9ecef;
     }
 </style>
 {% endblock %}
@@ -82,9 +93,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 html += `<h5 class="text-primary">${location}</h5>`;
                 html += '<div class="mb-3">';
                 docs.forEach(doc => {
-                    html += `<a href="${doc.link}" class="doc-badge">
-                        <i class="fas fa-file-pdf text-danger"></i> ${doc.name}
-                    </a>`;
+                    html += `<div class="doc-badge d-flex align-items-center justify-content-between" style="width: fit-content; min-width: 300px;">
+                        <span><i class="fas fa-file-pdf text-danger"></i> ${doc.name}</span>
+                        <a href="${doc.link}" target="_blank" class="btn btn-sm btn-outline-primary ms-3">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </div>`;
                 });
                 html += '</div>';
             }
@@ -109,15 +123,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (product.documents && product.documents.length > 0) {
                     product.documents.forEach(doc => {
                         if (data.isLoggedIn) {
-                            html += `<div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" name="documents" value="${doc.id}" id="doc${doc.id}">
-                                <label class="form-check-label" for="doc${doc.id}">
-                                    ${doc.name}
-                                </label>
+                            html += `<div class="doc-item">
+                                <div class="form-check mb-0">
+                                    <input class="form-check-input" type="checkbox" name="documents" value="${doc.id}" id="doc${doc.id}">
+                                    <label class="form-check-label" for="doc${doc.id}">
+                                        <i class="fas fa-file-certificate text-primary"></i> ${doc.name}
+                                    </label>
+                                </div>
+                                <a href="${doc.link}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
                             </div>`;
                         } else {
-                            html += `<div class="mb-2">
-                                <i class="fas fa-lock text-warning"></i> ${doc.name}
+                            html += `<div class="doc-item">
+                                <div>
+                                    <i class="fas fa-lock text-warning"></i> ${doc.name}
+                                </div>
+                                <a href="${doc.link}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
                             </div>`;
                         }
                     });
